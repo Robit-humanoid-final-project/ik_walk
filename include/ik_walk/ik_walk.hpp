@@ -92,8 +92,10 @@ class IKwalk : public rclcpp::Node
         //     std::bind(&IKwalk::zmp_callback, this, std::placeholders::_1));
 
         timer_ = this->create_wall_timer(10ms, std::bind(&IKwalk::timer_callback, this));
+        // (hojin) custom msg 없음 string → “left”, “right”만 있음, topic name: "/{robit_n}/kick_flag" 1주면 킥
         kick_flag_sub_ = create_subscription<std_msgs::msg::String>(
             "kick_flag", 10, std::bind(&IKwalk::kick_flag_callback, this, std::placeholders::_1));
+        // (hojin) custom msg 없음 bool값, topic name: "/{robit_n}/kick_flag_end" (n = 1, 2) # 1 받으면 킥 종료
         kick_flag_pub_ = this->create_publisher<std_msgs::msg::Bool>("kick_flag_end", 10);
 
         const auto motion_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable();
